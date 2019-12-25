@@ -40,12 +40,17 @@ func TestHiermap(t *testing.T) {
 
 	hm := New(len(testData))
 
-	for i := range testData {
+	for i := len(testData) - 1; i >= 0; i-- {
 		for k, v := range testData[i] {
 			hm.Store(k, v, i)
 			v2, ok := hm.Load(k, i)
 			assert.True(t, ok)
 			assert.Equal(t, v, v2)
+			if i > 0 {
+				v2, ok := hm.Load(k, i-1)
+				assert.True(t, ok)
+				assert.Equal(t, v, v2)
+			}
 		}
 	}
 	awaitChan := make(chan bool)
